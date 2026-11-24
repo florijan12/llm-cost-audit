@@ -100,7 +100,10 @@ def scan(root):
                 flags = []
                 if not MAXTOK_RE.search(window):
                     flags.append("no_output_limit")
-                if not file_cache:
+                # Caching only pays off on a large, repeated prefix (system prompt, documents, chat history).
+                # Don't suggest it for short one-off prompts.
+                repeated_context = bool(big_literals) or file_history or bool(SYSTEM_RE.search(window))
+                if not file_cache and repeated_context:
                     flags.append("no_cache_markers_in_file")
                 if file_volatile_system:
                     flags.append("possible_cache_breaker")
