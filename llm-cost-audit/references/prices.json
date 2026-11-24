@@ -1,0 +1,288 @@
+{
+ "checked": "2026-11-24",
+ "source": "https://lesspertoken.com/",
+ "openrouter_card_fee": 0.055,
+ "note": "USD per 1M tokens. 'list' = model maker's API price (reference price for open models). 'openrouter' = OpenRouter's listed price (its cheapest provider), excluding the card fee; add openrouter_card_fee. 'saygm' = SayGM's best listed price; what you actually pay can be somewhat higher when requests go to pricier providers. cache = cache-read price, null if not published.",
+ "models": [
+  {
+   "slug": "claude-fable-5-2",
+   "name": "Claude Fable 5.2",
+   "maker": "Anthropic",
+   "list": {
+    "in": 8.0,
+    "out": 40.0,
+    "cache": 0.2
+   },
+   "openrouter": {
+    "in": 8.0,
+    "out": 40.0,
+    "cache": 0.2
+   },
+   "saygm": {
+    "in": 4.12,
+    "out": 20.6,
+    "cache": 0.103
+   }
+  },
+  {
+   "slug": "claude-opus-5-5",
+   "name": "Claude Opus 5.5",
+   "maker": "Anthropic",
+   "list": {
+    "in": 4.0,
+    "out": 20.0,
+    "cache": 0.2
+   },
+   "openrouter": {
+    "in": 4.0,
+    "out": 20.0,
+    "cache": 0.2
+   },
+   "saygm": {
+    "in": 2.06,
+    "out": 10.3,
+    "cache": 0.103
+   }
+  },
+  {
+   "slug": "claude-sonnet-5-5",
+   "name": "Claude Sonnet 5.5",
+   "maker": "Anthropic",
+   "list": {
+    "in": 2.0,
+    "out": 10.0,
+    "cache": 0.1
+   },
+   "openrouter": {
+    "in": 2.0,
+    "out": 10.0,
+    "cache": 0.1
+   },
+   "saygm": {
+    "in": 1.03,
+    "out": 5.15,
+    "cache": 0.0515
+   }
+  },
+  {
+   "slug": "claude-haiku-5-5",
+   "name": "Claude Haiku 5.5",
+   "maker": "Anthropic",
+   "list": {
+    "in": 0.1,
+    "out": 0.5,
+    "cache": null
+   },
+   "openrouter": {
+    "in": 0.1,
+    "out": 0.5,
+    "cache": 0.01
+   },
+   "saygm": {
+    "in": 0.0515,
+    "out": 0.2575,
+    "cache": 0.00515
+   }
+  },
+  {
+   "slug": "gpt-6-2-astra",
+   "name": "GPT-6.2 Astra",
+   "maker": "OpenAI",
+   "list": {
+    "in": 8.0,
+    "out": 40.0,
+    "cache": null
+   },
+   "openrouter": {
+    "in": 8.0,
+    "out": 40.0,
+    "cache": 0.4
+   },
+   "saygm": {
+    "in": 3.296,
+    "out": 16.48,
+    "cache": 0.1648
+   }
+  },
+  {
+   "slug": "gpt-6-2-sol",
+   "name": "GPT-6.2 Sol",
+   "maker": "OpenAI",
+   "list": {
+    "in": 2.0,
+    "out": 10.0,
+    "cache": null
+   },
+   "openrouter": {
+    "in": 2.0,
+    "out": 10.0,
+    "cache": 0.1
+   },
+   "saygm": {
+    "in": 0.9785,
+    "out": 4.8925,
+    "cache": 0.048925
+   }
+  },
+  {
+   "slug": "gemini-4-neon",
+   "name": "Gemini 4 Neon",
+   "maker": "Google",
+   "list": {
+    "in": 3.0,
+    "out": 15.0,
+    "cache": 0.15
+   },
+   "openrouter": {
+    "in": 3.0,
+    "out": 15.0,
+    "cache": 0.15
+   },
+   "saygm": {
+    "in": 2.472,
+    "out": 12.36,
+    "cache": 0.1236
+   }
+  },
+  {
+   "slug": "gemini-4-argon",
+   "name": "Gemini 4 Argon",
+   "maker": "Google",
+   "list": {
+    "in": 2.0,
+    "out": 10.0,
+    "cache": null
+   },
+   "openrouter": {
+    "in": 2.0,
+    "out": 10.0,
+    "cache": 0.1
+   },
+   "saygm": {
+    "in": 1.1948,
+    "out": 5.974,
+    "cache": 0.05974
+   }
+  },
+  {
+   "slug": "gemini-3-8-flash",
+   "name": "Gemini 3.8 Flash",
+   "maker": "Google",
+   "list": {
+    "in": 0.75,
+    "out": 3.75,
+    "cache": null
+   },
+   "openrouter": {
+    "in": 0.825,
+    "out": 4.125,
+    "cache": 0.0825
+   },
+   "saygm": {
+    "in": 0.38625,
+    "out": 1.93125,
+    "cache": 0.038625
+   }
+  },
+  {
+   "slug": "deepseek-v4-1-flash-1017",
+   "name": "DeepSeek V4.1 Flash 1017",
+   "maker": "Open models",
+   "list": {
+    "in": 0.3,
+    "out": 1.2,
+    "cache": 0.006
+   },
+   "openrouter": {
+    "in": 0.03,
+    "out": 0.2,
+    "cache": 0.001
+   },
+   "saygm": {
+    "in": 0.13905,
+    "out": 0.5562,
+    "cache": 0.002781
+   }
+  },
+  {
+   "slug": "deepseek-v4-1-flash",
+   "name": "DeepSeek V4.1 Flash",
+   "maker": "Open models",
+   "list": {
+    "in": 0.3,
+    "out": 1.2,
+    "cache": 0.006
+   },
+   "openrouter": {
+    "in": 0.0507,
+    "out": 0.2028,
+    "cache": 0.001014
+   },
+   "saygm": {
+    "in": 0.08034,
+    "out": 0.32136,
+    "cache": 0.001607
+   }
+  },
+  {
+   "slug": "qwen3-8-27b",
+   "name": "Qwen3.8 27B",
+   "maker": "Open models",
+   "list": {
+    "in": 0.5,
+    "out": 3.0,
+    "cache": null
+   },
+   "openrouter": {
+    "in": 0.035,
+    "out": 1.5,
+    "cache": 0.0175
+   },
+   "saygm": {
+    "in": 0.0618,
+    "out": 0.3708,
+    "cache": 0.01236
+   }
+  },
+  {
+   "slug": "kimi-k3",
+   "name": "Kimi K3",
+   "maker": "Open models",
+   "list": {
+    "in": 3.0,
+    "out": 15.0,
+    "cache": null
+   },
+   "openrouter": {
+    "in": 0.192,
+    "out": 16.0,
+    "cache": 0.182
+   },
+   "saygm": {
+    "in": 1.854,
+    "out": 9.27,
+    "cache": 0.1854
+   }
+  },
+  {
+   "slug": "glm-5-3-flash",
+   "name": "GLM 5.3 Flash",
+   "maker": "Open models",
+   "list": {
+    "in": 0.15,
+    "out": 0.5,
+    "cache": null
+   },
+   "openrouter": {
+    "in": 0.15,
+    "out": 0.5,
+    "cache": 0.03
+   },
+   "saygm": {
+    "in": 0.128235,
+    "out": 0.42745,
+    "cache": 0.025647
+   }
+  }
+ ]
+}
