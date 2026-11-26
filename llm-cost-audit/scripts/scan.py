@@ -5,7 +5,8 @@ Heuristic, read-only, no network. It points you at code to read; it does not
 prove anything on its own. Every finding should be confirmed by opening the file.
 
 Recognises direct SDK calls (Anthropic, OpenAI, Gemini, LiteLLM, Vercel AI SDK)
-and calls made through LangChain and Pydantic AI.
+and calls made through LangChain, Pydantic AI, LlamaIndex, CrewAI, DSPy, AutoGen,
+Haystack, Semantic Kernel, the OpenAI Agents SDK, smolagents and Mastra.
 
 Usage:
     python scan.py PATH [--json] [--include-tests]
@@ -32,6 +33,15 @@ SDK_PATTERNS = {
     "langchain": r"(\bfrom langchain|\bimport langchain|@langchain/)",
     "pydantic-ai": r"(\bfrom pydantic_ai\b|\bimport pydantic_ai\b)",
     "vercel-ai": r"from ['\"]ai['\"]|@ai-sdk/",
+    "llama-index": r"(\bfrom llama_index\b|\bimport llama_index\b)",
+    "crewai": r"(\bfrom crewai\b|\bimport crewai\b)",
+    "dspy": r"\bimport dspy\b|\bfrom dspy\b",
+    "autogen": r"(\bfrom autogen|\bimport autogen|\bfrom ag2\b)",
+    "haystack": r"(\bfrom haystack\b|\bimport haystack\b)",
+    "semantic-kernel": r"(\bfrom semantic_kernel\b|\bimport semantic_kernel\b)",
+    "openai-agents": r"(\bfrom agents import\b[^\n]*\bRunner\b|@openai/agents)",
+    "smolagents": r"(\bfrom smolagents\b|\bimport smolagents\b)",
+    "mastra": r"@mastra/",
 }
 # Direct SDK calls: matched in any file.
 CALL_PATTERNS = [
@@ -47,6 +57,15 @@ FRAMEWORK_CALLS = [
     ("langchain", re.compile(r"\b([A-Za-z_][\w.]*)\.a?(invoke|stream|batch)\("), "langchain call"),
     ("pydantic-ai", re.compile(r"\b([A-Za-z_][\w.]*)\.(run|run_sync|run_stream|iter)\("), "pydantic-ai agent run"),
     ("pydantic-ai", re.compile(r"\b()(model_request|model_request_sync|model_request_stream)\("), "pydantic-ai direct request"),
+    ("llama-index", re.compile(r"\b([A-Za-z_][\w.]*)\.(a?complete|a?chat|a?stream_complete|a?stream_chat|a?query|a?predict)\("), "llama-index call"),
+    ("crewai", re.compile(r"\b([A-Za-z_][\w.]*)\.(kickoff|kickoff_async|kickoff_for_each|kickoff_for_each_async)\("), "crewai kickoff"),
+    ("dspy", re.compile(r"\b()dspy\.(Predict|ChainOfThought|ReAct|ProgramOfThought|MultiChainComparison)\("), "dspy module"),
+    ("autogen", re.compile(r"\b([A-Za-z_][\w.]*)\.(a?initiate_chat|run|run_stream|generate_reply)\("), "autogen agent run"),
+    ("haystack", re.compile(r"\b([A-Za-z_][\w.]*)\.(run|run_async)\("), "haystack pipeline run"),
+    ("semantic-kernel", re.compile(r"\b([A-Za-z_][\w.]*)\.(invoke|invoke_prompt|invoke_stream|get_chat_message_contents?)\("), "semantic-kernel call"),
+    ("openai-agents", re.compile(r"\b()Runner\.(run|run_sync|run_streamed)\("), "openai agents run"),
+    ("smolagents", re.compile(r"\b([A-Za-z_][\w.]*)\.run\("), "smolagents run"),
+    ("mastra", re.compile(r"\b([A-Za-z_][\w.]*[Aa]gent)\.(generate|stream)\("), "mastra agent call"),
 ]
 # Receivers that look like models always count; others that look like tools, retrievers, templates... don't.
 MODEL_HINT = re.compile(r"llm|model|chat|agent|chain|runnable|claude|gpt|gemini", re.I)
@@ -56,13 +75,14 @@ NOT_A_MODEL = re.compile(r"^self$|runner|tool|retriev|loader|vector|embed|splitt
 MODEL_RE = re.compile(r"""model(?:_name)?\s*[=:]\s*['"]([A-Za-z0-9._:/@-]+)['"]""")
 # Provider-prefixed model strings, as Pydantic AI and LangChain's init_chat_model take them.
 MODEL_STR_RE = re.compile(r"""['"]((?:anthropic|openai(?:-chat|-responses)?|google(?:-gla|-vertex|-cloud)?|openrouter|bedrock|groq|mistral|deepseek|cerebras|vercel|azure):[A-Za-z0-9._:/@-]+)['"]""")
+SLASH_MODEL_RE = re.compile(r"""['"]((?:anthropic|openai|gemini|vertex_ai|openrouter|bedrock|groq|deepseek|mistral|together_ai|azure)/[A-Za-z0-9._:/@-]+)['"]""")
 BARE_MODEL_RE = re.compile(r"""['"]((?:claude|gpt|gemini|o[134]|deepseek|qwen|kimi|glm)[-.\w]*\d[-.\w]*)['"]""", re.I)
 MAXTOK_RE = re.compile(r"max_tokens|max_output_tokens|max_completion_tokens|maxTokens|maxOutputTokens|max_new_tokens")
 BASE_URL_RE = re.compile(r"""(base_url|baseURL|base_url\s*=|api_base)\s*[=:]\s*['"]([^'"]+)['"]""")
 CACHE_RE = re.compile(r"cache_control|cachedContent|cached_content|prompt_cache|cacheControl|caches\.create|cachePoint|cache_point"
-                      r"|anthropic_cache|openrouter_cache|bedrock_cache|['\"]cache['\"]\s*\]?\s*[:=]\s*(True|['\"])|\bcache\s*=\s*True")
+                      r"|anthropic_cache|openrouter_cache|bedrock_cache|cache_control_injection_points|enable_anthropic_prompt_caching|LITELLM_ENABLE_ANTHROPIC_PROMPT_CACHING|['\"]cache['\"]\s*\]?\s*[:=]\s*(True|['\"])|\bcache\s*=\s*True")
 BATCH_RE = re.compile(r"batches\.create|/v1/batches|messages\.batches|batch_create|BatchPredictionJob|batches\.submit")
-LOOP_RE = re.compile(r"^\s*(for\b|while\b|async for\b)|\.(map|forEach)\(|Promise\.all\(")
+LOOP_RE = re.compile(r"^\s*(for\b|while\b|async for\b)|\.(map|forEach)\(|Promise\.all\(|kickoff_for_each|asyncio\.gather\(")
 HISTORY_RE = re.compile(r"(messages|history|conversation|chat_history)\s*(\.append|\.push|\.extend|\+=|\.concat)")
 VOLATILE_RE = re.compile(r"datetime\.now|datetime\.utcnow|time\.time\(\)|Date\.now\(|new Date\(|uuid|random\.|Math\.random")
 SYSTEM_RE = re.compile(r"""\bsystem\s*[=:]|role['"]?\s*[:=]\s*['"]system['"]|system_instruction|systemInstruction|SystemMessage|instructions\s*=""")
@@ -70,7 +90,8 @@ BIG_LITERAL_RE = re.compile(r'("""|\'\'\'|`)(.{2500,}?)\1', re.S)
 # Caching switched on behind a provider check: the classic way Claude-through-a-gateway loses its cache.
 CACHE_GATE_RE = re.compile(r"""(==\s*['"]anthropic['"]|['"]anthropic['"]\s*==|isinstance\([^)]*Anthropic|startswith\(\s*['"]anthropic)""")
 GATEWAY_RE = re.compile(r"openrouter|bedrock|vertex|azure|litellm", re.I)
-CLAUDE_VIA_GATEWAY_RE = re.compile(r"""['"](?:openrouter:anthropic/|anthropic/claude|bedrock:[^'"]*claude|[a-z]{2}\.anthropic\.claude)""", re.I)
+CLAUDE_VIA_GATEWAY_RE = re.compile(r"""['"](?:openrouter[:/]anthropic/|bedrock[:/][^'"]*claude|vertex_ai/claude|(?:[a-z]{2}\.)?anthropic\.claude)""", re.I)
+OPENROUTER_ID_RE = re.compile(r"""['"]anthropic/claude[^'"]*['"]""")
 
 EXPENSIVE_HINTS = ["opus", "fable", "mythos", "astra", "neon", "gpt-6", "o3", "o4", "kimi-k3", "sonnet"]
 
@@ -123,7 +144,7 @@ def code_only(text, suffix, strings=True):
 def find_model(lines, i):
     """The model string nearest a call: model=... after or before it, else a provider:model or bare model string."""
     after, before = "\n".join(lines[i:i + WINDOW]), "\n".join(lines[max(0, i - WINDOW):i])
-    for rx in (MODEL_RE, MODEL_STR_RE, BARE_MODEL_RE):
+    for rx in (MODEL_RE, MODEL_STR_RE, SLASH_MODEL_RE, BARE_MODEL_RE):
         m = rx.search(after) or rx.search(before)
         if m:
             return m.group(1)
@@ -164,7 +185,8 @@ def scan(root, include_tests=False):
         g = cache_gated(lines)
         if g and GATEWAY_RE.search(text):
             gated.append({"file": rel, "lines": g})
-        if CLAUDE_VIA_GATEWAY_RE.search("\n".join(code_only(text, path.suffix, strings=False))):
+        kept = "\n".join(code_only(text, path.suffix, strings=False))
+        if CLAUDE_VIA_GATEWAY_RE.search(kept) or ("openrouter.ai" in kept and OPENROUTER_ID_RE.search(kept)):
             claude_gw.append({"file": rel, "cache_in_file": file_cache})
         file_history = bool(HISTORY_RE.search(text))
         file_volatile_system = bool(VOLATILE_RE.search(text)) and bool(SYSTEM_RE.search(text))
