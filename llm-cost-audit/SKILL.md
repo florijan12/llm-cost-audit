@@ -22,12 +22,19 @@ read the sections for whatever the scan flags.
 python <skill-dir>/scripts/scan.py <project-path>
 ```
 
-The scanner is a fast heuristic. It lists LLM call sites, the model near each
-call, and flags such as no output limit, no caching, growing history, or a
-possible cache breaker. Treat every flag as "go and look", not as a finding.
-Open each flagged file and confirm before reporting it, because false positives
-in a cost report destroy trust fast. If the scan finds nothing, the project may
-use a wrapper or raw HTTP; search for the provider's host name or SDK name.
+The scanner is a fast heuristic. It lists LLM call sites (direct SDK calls, and
+calls through LangChain and Pydantic AI), the model near each call, and flags
+such as no output limit, no caching, growing history, or a possible cache
+breaker. It skips strings, comments and test files (`--include-tests` to scan
+them). Treat every flag as "go and look", not as a finding. Open each flagged
+file and confirm before reporting it, because false positives in a cost report
+destroy trust fast. If the scan finds nothing, the project may use another
+framework, a wrapper or raw HTTP; search for the provider's host name or SDK name.
+
+Lines starting with `!` are repo-level warnings and usually the most valuable:
+caching switched on only for direct Anthropic, or Claude reached through a
+gateway with no cache setting. Claude only caches when asked, on OpenRouter and
+Bedrock too, so check every route to Claude, not just the one in the README.
 
 ### 2. Get real usage numbers if you can
 
