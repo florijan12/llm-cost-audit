@@ -32,8 +32,11 @@ needs `cache_control` breakpoints for Anthropic models and Bedrock needs
 `cachePoint` blocks; neither caches Claude automatically. Frameworks often switch
 caching on only for the direct Anthropic provider: Pydantic AI's unified `cache`
 setting, for example, must be requested for `openrouter:` and `bedrock:` models
-too. Check `cache_read` tokens on each route you support. (Found in a real audit:
-browser-use requested caching only for direct Anthropic.)
+too. Frameworks built on LiteLLM (CrewAI, DSPy, smolagents' `LiteLLMModel`) send
+Claude cache markers only if you set `cache_control` in messages, pass LiteLLM's
+`cache_control_injection_points`, or turn on its global Anthropic prompt-caching
+switch. Check `cache_read` tokens on each route you support. (Found in a real
+audit: browser-use requested caching only for direct Anthropic.)
 
 **OpenAI and Google:** both cache repeated prompt prefixes on supported models
 (Google also offers explicit context caches). Mechanics and discounts differ by
