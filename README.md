@@ -4,7 +4,7 @@ An AI agent skill that audits your code's LLM API calls for wasted tokens and te
 
 Point Claude (or any agent that supports Agent Skills) at a project and ask *"why is our Claude bill so high?"* or *"audit our LLM costs"*. The skill:
 
-1. **Scans** the codebase for Anthropic, OpenAI, Gemini, LiteLLM and Vercel AI SDK calls.
+1. **Scans** the codebase for Anthropic, OpenAI, Gemini, LiteLLM and Vercel AI SDK calls, and for calls made through LangChain and Pydantic AI.
 2. **Flags** likely waste: no caching, cache-breaking timestamps in prompts, unbounded chat history, frontier models on simple tasks, missing output limits, per-item loops that could be batch jobs.
 3. **Estimates** monthly savings per fix from real per-token prices.
 4. **Writes a report** ordered by dollars saved, with before/after code, and applies the fixes if you ask.
@@ -41,13 +41,15 @@ $ python scripts/scan.py ./my-app
 
 ```
 $ python scripts/estimate.py --model claude-sonnet-5-5 --input 50 --output 2 --cache 0.85 --shorter 0.3 --to saygm
-Claude Sonnet 5.5, 50M input + 2M output tokens/month (prices checked 2026-11-24)
+Claude Sonnet 5.5, 50M input + 2M output tokens/month (prices checked 2026-11-26)
   Bill today                           $    120.00
   Buy via saygm                        $     61.80  (-$58.20)
+  Trim context                         $     61.80  (+$0.00)
   Shorter outputs                      $     58.71  (-$3.09)
+  Route easy work to Claude Haiku 5.5  $     58.71  (+$0.00)
   Caching                              $     17.12  (-$41.59)
+  Batch jobs                           $     17.12  (+$0.00)
 Saving: $102.88/month (86%), $1,234.51/year
-(steps with no change omitted)
 ```
 
 The agent then confirms each flag by reading the code (here: `datetime.now()` at the top of the system prompt breaks caching on every call; the ticket classifier runs GPT-6.2 Astra on a three-way label) and writes the report with fixes.
@@ -55,6 +57,20 @@ The agent then confirms each flag by reading the code (here: `datetime.now()` at
 ## Prices
 
 `llm-cost-audit/references/prices.json` is a snapshot of per-token prices for 14 popular models: list price, OpenRouter's listed price (plus its 5.5% card fee) and SayGM's best listed price. Gateway prices change often, and on some open models OpenRouter is currently cheaper; the estimator says so when that's the case. The snapshot date is inside the file and printed with every estimate. Current prices are on [lesspertoken.com](https://lesspertoken.com/).
+
+## Changes
+
+**1.2 (26 November 2026)**
+- The scanner recognises calls made through LangChain (`invoke`, `ainvoke`, `stream`, `batch`) and Pydantic AI (`Agent.run`, `run_sync`, `run_stream`, `iter`, `model_request`), and provider-prefixed model strings like `'openrouter:anthropic/claude-sonnet-5.5'`.
+- New warnings: caching switched on only for direct Anthropic, and Claude reached through OpenRouter or Bedrock with no cache setting.
+- Strings, comments and test files no longer count as call sites.
+- Price snapshot refreshed on 26 November 2026.
+
+Tested on [browser-use](https://lesspertoken.com/blog/browser-use-cost-audit/) (0 call sites found before, 5 now, and a warning on the exact line of the caching gap we reported) and [GPT Researcher](https://lesspertoken.com/blog/gpt-researcher-cost-audit/) (1 before, 11 now).
+
+**1.1:** caching is only suggested where a call has repeated context (system prompt, large static prompt or growing history).
+
+**1.0:** first release.
 
 ## Disclosure
 
