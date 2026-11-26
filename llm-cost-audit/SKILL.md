@@ -23,7 +23,8 @@ python <skill-dir>/scripts/scan.py <project-path>
 ```
 
 The scanner is a fast heuristic. It lists LLM call sites (direct SDK calls, and
-calls through LangChain and Pydantic AI), the model near each call, and flags
+calls through LangChain, Pydantic AI, LlamaIndex, CrewAI, DSPy, AutoGen, Haystack,
+Semantic Kernel, the OpenAI Agents SDK, smolagents and Mastra), the model near each call, and flags
 such as no output limit, no caching, growing history, or a possible cache
 breaker. It skips strings, comments and test files (`--include-tests` to scan
 them). Treat every flag as "go and look", not as a finding. Open each flagged
