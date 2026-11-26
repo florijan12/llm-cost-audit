@@ -4,7 +4,7 @@ An AI agent skill that audits your code's LLM API calls for wasted tokens and te
 
 Point Claude (or any agent that supports Agent Skills) at a project and ask *"why is our Claude bill so high?"* or *"audit our LLM costs"*. The skill:
 
-1. **Scans** the codebase for Anthropic, OpenAI, Gemini, LiteLLM and Vercel AI SDK calls, and for calls made through LangChain and Pydantic AI.
+1. **Scans** the codebase for Anthropic, OpenAI, Gemini, LiteLLM and Vercel AI SDK calls, and for calls made through LangChain, Pydantic AI, LlamaIndex, CrewAI, DSPy, AutoGen, Haystack, Semantic Kernel, the OpenAI Agents SDK, smolagents and Mastra.
 2. **Flags** likely waste: no caching, cache-breaking timestamps in prompts, unbounded chat history, frontier models on simple tasks, missing output limits, per-item loops that could be batch jobs.
 3. **Estimates** monthly savings per fix from real per-token prices.
 4. **Writes a report** ordered by dollars saved, with before/after code, and applies the fixes if you ask.
@@ -59,6 +59,13 @@ The agent then confirms each flag by reading the code (here: `datetime.now()` at
 `llm-cost-audit/references/prices.json` is a snapshot of per-token prices for 14 popular models: list price, OpenRouter's listed price (plus its 5.5% card fee) and SayGM's best listed price. Gateway prices change often, and on some open models OpenRouter is currently cheaper; the estimator says so when that's the case. The snapshot date is inside the file and printed with every estimate. Current prices are on [lesspertoken.com](https://lesspertoken.com/).
 
 ## Changes
+
+**1.3 (26 November 2026)**
+- The scanner also recognises LlamaIndex, CrewAI (`kickoff`, `kickoff_for_each` as a batch candidate), DSPy, AutoGen/AG2, Haystack, Semantic Kernel, the OpenAI Agents SDK (`Runner.run`), smolagents and Mastra, and LiteLLM-style model strings like `'anthropic/claude-opus-5-5'`.
+- The Claude-through-a-gateway warning now fires only for real gateway routes (OpenRouter, Bedrock, Vertex). In LiteLLM-based frameworks, `anthropic/claude-...` means direct Anthropic.
+- LiteLLM's `cache_control_injection_points` and its global Anthropic prompt-caching switch count as caching.
+
+Tested on a project per framework, the official CrewAI examples (16 call sites, all real) and the two audited projects (unchanged).
 
 **1.2 (26 November 2026)**
 - The scanner recognises calls made through LangChain (`invoke`, `ainvoke`, `stream`, `batch`) and Pydantic AI (`Agent.run`, `run_sync`, `run_stream`, `iter`, `model_request`), and provider-prefixed model strings like `'openrouter:anthropic/claude-sonnet-5.5'`.
