@@ -1,5 +1,5 @@
 {
- "checked": "2026-11-24",
+ "checked": "2026-11-26",
  "source": "https://lesspertoken.com/",
  "openrouter_card_fee": 0.055,
  "note": "USD per 1M tokens. 'list' = model maker's API price (reference price for open models). 'openrouter' = OpenRouter's listed price (its cheapest provider), excluding the card fee; add openrouter_card_fee. 'saygm' = SayGM's best listed price; what you actually pay can be somewhat higher when requests go to pricier providers. cache = cache-read price, null if not published.",
@@ -14,8 +14,8 @@
     "cache": 0.2
    },
    "openrouter": {
-    "in": 8.0,
-    "out": 40.0,
+    "in": 8,
+    "out": 40,
     "cache": 0.2
    },
    "saygm": {
@@ -34,8 +34,8 @@
     "cache": 0.2
    },
    "openrouter": {
-    "in": 4.0,
-    "out": 20.0,
+    "in": 4,
+    "out": 20,
     "cache": 0.2
    },
    "saygm": {
@@ -54,8 +54,8 @@
     "cache": 0.1
    },
    "openrouter": {
-    "in": 2.0,
-    "out": 10.0,
+    "in": 2,
+    "out": 10,
     "cache": 0.1
    },
    "saygm": {
@@ -94,14 +94,14 @@
     "cache": null
    },
    "openrouter": {
-    "in": 8.0,
-    "out": 40.0,
+    "in": 8,
+    "out": 40,
     "cache": 0.4
    },
    "saygm": {
-    "in": 3.296,
-    "out": 16.48,
-    "cache": 0.1648
+    "in": 3.6668,
+    "out": 18.334,
+    "cache": 0.18334
    }
   },
   {
@@ -114,14 +114,14 @@
     "cache": null
    },
    "openrouter": {
-    "in": 2.0,
-    "out": 10.0,
+    "in": 2,
+    "out": 10,
     "cache": 0.1
    },
    "saygm": {
-    "in": 0.9785,
-    "out": 4.8925,
-    "cache": 0.048925
+    "in": 1.03,
+    "out": 5.15,
+    "cache": 0.0515
    }
   },
   {
@@ -134,14 +134,14 @@
     "cache": 0.15
    },
    "openrouter": {
-    "in": 3.0,
-    "out": 15.0,
+    "in": 3,
+    "out": 15,
     "cache": 0.15
    },
    "saygm": {
-    "in": 2.472,
-    "out": 12.36,
-    "cache": 0.1236
+    "in": 1.6995,
+    "out": 8.4975,
+    "cache": 0.084975
    }
   },
   {
@@ -154,8 +154,8 @@
     "cache": null
    },
    "openrouter": {
-    "in": 2.0,
-    "out": 10.0,
+    "in": 2,
+    "out": 10,
     "cache": 0.1
    },
    "saygm": {
@@ -194,14 +194,14 @@
     "cache": 0.006
    },
    "openrouter": {
-    "in": 0.03,
-    "out": 0.2,
-    "cache": 0.001
+    "in": 0.045,
+    "out": 0.25,
+    "cache": 0.0025
    },
    "saygm": {
-    "in": 0.13905,
-    "out": 0.5562,
-    "cache": 0.002781
+    "in": 0.07725,
+    "out": 0.309,
+    "cache": 0.001545
    }
   },
   {
@@ -219,9 +219,9 @@
     "cache": 0.001014
    },
    "saygm": {
-    "in": 0.08034,
-    "out": 0.32136,
-    "cache": 0.001607
+    "in": 0.076941,
+    "out": 0.307764,
+    "cache": 0.001539
    }
   },
   {
@@ -234,14 +234,14 @@
     "cache": null
    },
    "openrouter": {
-    "in": 0.035,
-    "out": 1.5,
-    "cache": 0.0175
+    "in": 0.039,
+    "out": 1.25,
+    "cache": 0.0039
    },
    "saygm": {
-    "in": 0.0618,
-    "out": 0.3708,
-    "cache": 0.01236
+    "in": 0.061285,
+    "out": 0.36771,
+    "cache": 0.012257
    }
   },
   {
@@ -254,14 +254,14 @@
     "cache": null
    },
    "openrouter": {
-    "in": 0.192,
-    "out": 16.0,
-    "cache": 0.182
+    "in": 0.25,
+    "out": 9,
+    "cache": 0.1
    },
    "saygm": {
-    "in": 1.854,
-    "out": 9.27,
-    "cache": 0.1854
+    "in": 1.85091,
+    "out": 9.25455,
+    "cache": 0.185091
    }
   },
   {
@@ -274,14 +274,14 @@
     "cache": null
    },
    "openrouter": {
-    "in": 0.15,
-    "out": 0.5,
+    "in": 0.0356,
+    "out": 0.0815,
     "cache": 0.03
    },
    "saygm": {
-    "in": 0.128235,
-    "out": 0.42745,
-    "cache": 0.025647
+    "in": 0.123445,
+    "out": 0.411485,
+    "cache": 0.024689
    }
   }
  ]

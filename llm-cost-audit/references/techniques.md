@@ -27,6 +27,14 @@ can be automatic or set explicitly with `cache_control` breakpoints on content
 blocks (up to 4). Usage objects report `cache_creation_input_tokens` and
 `cache_read_input_tokens`; a low read share means the prefix keeps changing.
 
+**Claude through a gateway or framework:** caching is still opt-in. OpenRouter
+needs `cache_control` breakpoints for Anthropic models and Bedrock needs
+`cachePoint` blocks; neither caches Claude automatically. Frameworks often switch
+caching on only for the direct Anthropic provider: Pydantic AI's unified `cache`
+setting, for example, must be requested for `openrouter:` and `bedrock:` models
+too. Check `cache_read` tokens on each route you support. (Found in a real audit:
+browser-use requested caching only for direct Anthropic.)
+
 **OpenAI and Google:** both cache repeated prompt prefixes on supported models
 (Google also offers explicit context caches). Mechanics and discounts differ by
 model, so check current docs before quoting numbers.
